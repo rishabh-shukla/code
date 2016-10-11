@@ -27,6 +27,7 @@ node* mergesort(node*);
 node* merge(node*,node*);
 void sort();
 int detectloop(node*);
+void deleteloop(node*);
 };
 
 list::node* list::create(int val)
@@ -176,6 +177,28 @@ int list::detectloop(node* trav)
 	}
 	return 0;
 }
+
+void list::deleteloop(node* trav)
+{
+	node* slow=trav,*fast=trav->next;
+	while(fast && fast->next)
+	{
+		if(slow==fast)
+			break;
+		slow=slow->next;
+		fast=fast->next->next;
+	}
+	if(slow==fast)
+	{
+		slow=trav;
+		while(slow!=fast->next)
+			{
+				slow=slow->next;
+				fast=fast->next;
+			}
+			fast->next=NULL;
+	}
+}
 int main() {
 	// your code goes here
 	list l,m;
@@ -186,9 +209,11 @@ int main() {
 	m.head->next->next->next->next->next=m.head->next;
 	l.ins(3,0);
 //	l.merge(l.head,m.head);
-	l.sort();
-	l.print();
+//	l.sort();
+//	l.print();
+	//m.print();
+	m.deleteloop(m.head);
 	cout<<m.detectloop(m.head);
-	
+	m.print();
 	return 0;
 }
