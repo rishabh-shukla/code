@@ -1,3 +1,5 @@
+//http://stackoverflow.com/questions/5523109/c-define-class-member-struct-and-return-it-in-a-member-function
+
 #include <iostream>
 using namespace std;
 class list{
