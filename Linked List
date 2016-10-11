@@ -1,0 +1,87 @@
+#include <iostream>
+using namespace std;
+
+struct node{
+	int val;
+	node* next;
+};
+
+node* insert(node* head,int val)
+{
+	node* temp=new node;
+	temp->val=val;
+	temp->next=NULL;
+	if(head==NULL)
+	{
+		head=temp;
+		return head;
+	}
+	node* trav=head,*prev=NULL;
+	while(trav!=NULL)
+	{
+		prev=trav;
+		trav=trav->next;
+	}
+	prev->next=temp;
+	return head;
+}
+
+node* front(node* head,int val)
+{
+	node* temp=new node;
+	temp->val=val;
+	temp->next=head;
+	return temp;
+}
+
+node* del(node* head,int val)
+{
+	if(head==NULL)
+		return head;
+		node* temp=head;
+		node* prev=new node;
+	while(head->val!=val && head->next!=NULL)
+	{
+		prev=head;
+		head=head->next;
+	}
+	prev->next=head->next;
+	return temp;
+	
+}
+
+node* ins(node* head,int val,int pos)
+{
+	if(pos==0)
+		return front(head,val);
+	int i=0;
+	node* temp=head;
+	node* prev=new node;
+	while(temp!=NULL && i<pos)
+	{
+		prev=temp;
+		temp=temp->next;
+		i++;
+	}
+	prev->next=front(temp,val);
+	return head;
+}
+
+void print(node* head)
+{
+	while(head!=NULL)
+	{
+		cout<<head->val;
+		head=head->next;
+	}
+}
+
+int main() {
+	// your code goes here
+	node* head=NULL;
+	for(int i=1;i<=5;i++)
+	head=insert(head,i);
+	head=ins(head,6,2);
+	print(head);
+	return 0;
+}
