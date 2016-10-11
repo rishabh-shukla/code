@@ -1,0 +1,168 @@
+#include <iostream>
+using namespace std;
+class list{
+	
+//	private:
+	public:
+struct node{
+	
+	int val;
+	node* next;
+};
+node* head;
+node* create(int);
+node* front(node*,int);
+node* getmiddle(node*);
+	
+list()
+{
+	head=NULL;
+}
+
+void insert(int);
+void del(int);
+void ins(int ,int);
+void print(void);
+node* mergesort(node*);
+node* merge(node*,node*);
+};
+
+list::node* list::create(int val)
+{
+	node* temp=new node;
+	temp->val=val;
+	temp->next=NULL;
+	return temp;
+}
+void list::insert(int val)
+{
+	//node*temp=create(val);
+	node* temp=new node;
+	temp->val=val;
+	temp->next=NULL;
+	if(head==NULL)
+	{
+		head=temp;
+		//return head;
+	}
+	node* trav=head,*prev=NULL;
+	while(trav!=NULL)
+	{
+		prev=trav;
+		trav=trav->next;
+	}
+	prev->next=temp;
+//	return head;
+}
+
+list::node* list::front(node* trav,int val)
+{
+	node* temp=create(val);
+	
+	temp->next=trav;
+	
+	return temp;
+}
+
+void list::del(int pos)
+{
+	if(head==NULL)
+		return;
+		
+	node* temp=head;
+	node* prev=new node;
+	int i=0;
+	while(head!=NULL && i<pos)
+	{
+		prev=head;
+		head=head->next;
+		i++;
+	}
+	prev->next=head->next;
+	head=temp;
+	//return temp;
+	
+}
+
+void list::ins(int val,int pos)
+{
+	if(pos==0)
+		{
+			head=front(head,val);
+			return ;
+		}
+	int i=0;
+	node* temp=head;
+	node* prev;
+	while(temp!=NULL && i<pos)
+	{
+		prev=temp;
+		temp=temp->next;
+		i++;
+	}
+	prev->next=front(temp,val);
+	
+}
+
+void list::print(void)
+{
+	while(head!=NULL)
+	{
+		cout<<head->val<<" ";
+		head=head->next;
+	}
+}
+
+list::node* list::getmiddle(node* trav)
+{
+	node *slow,*fast;
+	slow=trav;
+	fast=trav;
+	while(slow!=NULL && fast!=NULL && fast->next!=NULL)
+	{
+		slow=slow->next;
+		fast=fast->next->next;
+	}
+	return slow;
+}
+
+list::node* list::mergesort(node* trav)
+{
+	node* middle=getmiddle(trav);
+	node* shalf=middle->next;
+	middle->next=NULL;
+	return merge(mergesort(shalf),mergesort(trav));
+}
+
+list::node* list::merge(node* a,node* b)
+{
+	node* result=NULL;
+	if(a==NULL)
+		return b;
+	else if(b==NULL)
+		return a;
+	if(a->val<=b->val)
+	{
+		result=a;
+		result->next=merge(a->next,b);
+	}
+	else
+	{
+		result=b;
+		result->next=merge(a,b->next);
+	}
+	return result;
+	
+}
+int main() {
+	// your code goes here
+	list l,m;
+	for(int i=5;i>=1;i--)
+	l.ins(2*i,0);
+	for(int i=5;i>=1;i--)
+	m.ins(3*i,0);
+	l.merge(l.head,m.head);
+	l.print();
+	
+	return 0;
+}
