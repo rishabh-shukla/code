@@ -25,6 +25,7 @@ void ins(int ,int);
 void print(void);
 node* mergesort(node*);
 node* merge(node*,node*);
+void sort();
 };
 
 list::node* list::create(int val)
@@ -115,19 +116,26 @@ void list::print(void)
 
 list::node* list::getmiddle(node* trav)
 {
+	if(trav==NULL)
+		return trav;
 	node *slow,*fast;
 	slow=trav;
 	fast=trav;
-	while(slow!=NULL && fast!=NULL && fast->next!=NULL)
+	while( fast->next!=NULL && fast->next->next!=NULL)
 	{
 		slow=slow->next;
 		fast=fast->next->next;
 	}
 	return slow;
 }
-
+void list::sort()
+{
+	head=mergesort(head);
+}
 list::node* list::mergesort(node* trav)
 {
+	if(trav==NULL || trav->next==NULL)
+		return trav;
 	node* middle=getmiddle(trav);
 	node* shalf=middle->next;
 	middle->next=NULL;
@@ -161,7 +169,9 @@ int main() {
 	l.ins(2*i,0);
 	for(int i=5;i>=1;i--)
 	m.ins(3*i,0);
-	l.merge(l.head,m.head);
+	l.ins(3,0);
+//	l.merge(l.head,m.head);
+	l.sort();
 	l.print();
 	
 	return 0;
