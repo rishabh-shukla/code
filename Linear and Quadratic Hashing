@@ -1,0 +1,168 @@
+#include<iostream>
+#include<stdlib.h>
+#include<time.h>
+#include<iomanip>
+
+using namespace std;
+
+int table_size=59,num_attempt=0;
+
+class HashObj
+{
+  int *table;
+  int tablesize;
+  int num_keys;
+ public:
+  HashObj()
+  {
+   tablesize=table_size;
+   table=new int[tablesize];
+   for(int i=0;i<tablesize;i++)
+    table[i]=-1;
+   num_keys=0;
+  }
+  void insert(int , float , int (HashObj::*)(int) );
+  bool delete_d(int );
+  int search(int );
+  int hash(int );
+  void rehash();
+  int linear(int );
+  int quadratic(int );
+  void print_table();
+  void reset();
+};
+
+void HashObj::insert(int key, float load_factor, int (HashObj::*probing)(int))
+{
+ if(num_keys>=tablesize*load_factor)
+  rehash();
+ int pos=hash(key),i=1;
+ while(table[pos]!=-1)
+ {
+  num_attempt++;
+  pos+=(this->*probing)(i++);
+  if(pos>=tablesize)
+   pos%=tablesize;
+ }
+ table[pos]=key;
+ num_attempt++;
+ num_keys++;
+}
+
+bool HashObj::delete_d(int key)
+{
+ int pos=search(key);
+ if(pos!=-1)
+ {
+  table[pos]=-1;
+  return true;
+ }
+ return false;
+}
+
+int HashObj::search(int key)
+{
+ for(int i=0;i<tablesize;i++)
+  if(table[i]==key)
+   return i;
+ return -1;
+}
+
+int HashObj::hash(int key)
+{
+ return key%tablesize;
+}
+
+void HashObj::rehash()
+{
+ tablesize*=2;
+ int *tmp=new int[tablesize];
+ int k=0,j;
+ for(j=0;j<tablesize;j++)
+  tmp[j]=-1;
+ for(j=0;j<num_keys;)
+  if(table[k++]!=-1)
+  {
+   int key=table[k-1];
+   int pos=hash(key),i=1;
+   while(tmp[pos]!=-1)
+   {
+    num_attempt++;
+    pos+=linear(i++);
+    if(pos>=tablesize)
+     pos%=tablesize;
+   }
+   tmp[pos]=key;
+   num_attempt++;
+   j++;
+  }
+  delete[] table;
+  table=tmp;
+}
+
+int HashObj::linear(int collision_index)
+{
+ return collision_index;
+}
+
+int HashObj::quadratic(int collision_index)
+{
+ return collision_index*collision_index;
+}
+
+void HashObj::print_table()
+{
+  for(int i=0;i<tablesize;i++)
+   cout<<table[i]<<" ";
+ cout<<endl<<"Table Size : "<<tablesize<<"  Num_Elem : "<<num_keys;
+
+}
+
+void HashObj::reset()
+{
+ delete[] table;
+ tablesize=table_size;
+ table=new int[tablesize];
+ for(int i=0;i<tablesize;i++)
+  table[i]=-1;
+ num_keys=0;
+}
+
+int main()
+{cout<<setw(15)<<"Hashing"<<endl;
+ cout<<setw(15)<<"*******"<<endl;
+ srand(time(NULL));
+ HashObj H;
+ int attempt[6];
+ float load_factor[3]={0.5,0.75,0.9};
+ cout<<"\n\nNote:- The program sometimes does not work on first try.\n\n";
+ cout<<"Enter table size : ";
+ cin>>table_size;
+ for(int j=0;j<6;j++)
+ {
+  for(int i=0;i<300;i++)
+  {
+   int key=rand()%8193;
+   while(H.search(key)!=-1)
+    key=rand()%8193;
+   if(j<3)
+    H.insert(key,load_factor[j],&HashObj::linear);
+   else
+    H.insert(key,load_factor[j-3],&HashObj::quadratic);
+  }
+  attempt[j]=num_attempt;
+
+  num_attempt=0;
+  H.reset();
+ }
+ cout<<"--::Table showing no. of attempt per insertion::--"<<endl;
+ cout<<"---------------------------------------------------"<<endl;
+ cout<<"Probing     λ=0.5     λ=0.75    λ=0.9"<<endl;
+ cout<<"Linear      ";
+ for(int i=0;i<3;i++)
+  cout<<setw(10)<<left<<attempt[i]/300.0;
+ cout<<"\nQuadratic   ";
+ for(int i=0;i<3;i++)
+  cout<<setw(10)<<left<<attempt[i+3]/300.0;
+ return 0;
+}
