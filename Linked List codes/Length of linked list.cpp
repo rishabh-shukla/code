@@ -24,6 +24,12 @@ int len(node* head)
     }
     return l;
 }
+int len_rec(node* head)
+{
+    if(head==NULL)
+        return 0;
+    else return 1+len_rec(head->next);
+}
 int main()
 {
     struct node * head=NULL;
@@ -32,5 +38,5 @@ int main()
     insert_front(&head,3);
     insert_front(&head,4);
     insert_front(&head,1);
-    cout<<len(head);
+    cout<<len(head)<<" "<<len_rec(head);
 }
