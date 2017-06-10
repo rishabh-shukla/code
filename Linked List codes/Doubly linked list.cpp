@@ -57,6 +57,22 @@ void print(node* head)
         head=head->next;
     }
 }
+void deletenode(struct node **head_ref, struct node *del)
+{
+  if(*head_ref == NULL || del == NULL)
+    return;
+  if(*head_ref == del)
+    *head_ref = del->next;
+
+  if(del->next != NULL)
+    del->next->prev = del->prev;
+
+  if(del->prev != NULL)
+    del->prev->next = del->next;
+
+//  free(del);
+  return;
+}
 int main()
 {
     node* head=NULL;
@@ -65,6 +81,9 @@ int main()
     push(&head,3);
     append(&head,4);
     insertAfter(head->next,5);
+    print(head);
+    cout<<'\n';
+    deletenode(&head,head);
     print(head);
 
 }
