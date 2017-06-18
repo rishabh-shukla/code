@@ -1,4 +1,3 @@
-// C++ program to generate binary numbers from 1 to n
 #include <iostream>
 #include <queue>
 using namespace std;
@@ -11,7 +10,7 @@ void generatePrintBinary(int n)
         string s1 = q.front();
         q.pop();
         cout << s1 << "\n";
-        string s2 = s1;  // Store s1 before changing it
+        string s2 = s1;
         q.push(s1.append("0"));
         q.push(s2.append("1"));
     }
