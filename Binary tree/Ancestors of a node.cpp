@@ -2,6 +2,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 using namespace std;
+
 struct node
 {
    int data;
@@ -40,4 +41,5 @@ int main()
   root->left->right = newnode(5);
   root->left->left->left  = newnode(7);
   printAncestors(root, 7);
+  return 0;
 }
